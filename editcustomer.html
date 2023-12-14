@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Customer</title>
+  <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+  <style>
+    body {
+      font-family: 'Roboto';
+            font-weight: bold;
+    }
+
+    form {
+      max-width: 400px;
+      margin: 20px auto;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+    }
+
+    .button1 {
+      
+        font-family: 'Roboto';
+            font-weight: bold;
+            color: white;
+            font-size: medium;
+            background-color: rgb(66, 149, 237);
+            border-radius: 0.15cm;
+            border-color: gre;
+            padding: 5px 15px;
+            transition: all 0.2s ease-in-out;
+    }
+    button {
+        font-family: 'Roboto';
+            font-weight: bold;
+            color: white;
+            font-size: medium;
+            background-color: rgb(66, 149, 237);
+            border-radius: 0.15cm;
+            border-color: gre;
+            padding: 5px 15px;
+            transition: all 0.2s ease-in-out;
+    }
+    button:hover {
+            background-color: #5c34ee;
+            box-shadow: 0 5px 15px rgb(66, 149, 237);
+        }
+  </style>
+</head>
+<body>
+
+<form id="customerForm">
+  <label for="firstName">First Name (mandatory):</label>
+  <input type="text" id="firstName" name="first_name" required>
+
+  <label for="lastName">Last Name (mandatory):</label>
+  <input type="text" id="lastName" name="last_name" required>
+
+  <label for="street">Street:</label>
+  <input type="text" id="street" name="street">
+
+  <label for="address">Address:</label>
+  <input type="text" id="address" name="address">
+
+  <label for="city">City:</label>
+  <input type="text" id="city" name="city">
+
+  <label for="state">State:</label>
+  <input type="text" id="state" name="state">
+
+  <label for="email">Email:</label>
+  <input type="email" id="email" name="email">
+
+  <label for="phone">Phone:</label>
+  <input type="tel" id="phone" name="phone">
+
+  <button type="button" onclick="createCustomer()">Submit</button>
+ 
+
+</form>
+
+<script>
+  function getUUIDFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('uuid');
+  }
+
+  // Get the UUID from the URL
+  const uuid = getUUIDFromURL();
+
+  // Check if the UUID is present
+  if (uuid) {
+    // The UUID is available, you can use it as needed
+    console.log('UUID:', uuid);
+
+    // You can fetch data using the UUID and populate the form fields here
+    // Example:
+    // fetch(`https://api.example.com/customer/${uuid}`)
+    //   .then(response => response.json())
+    //   .then(data => {
+    //     // Populate form fields with data
+    //     document.getElementById('firstName').value = data.first_name;
+    //     document.getElementById('lastName').value = data.last_name;
+    //     // Add similar lines for other form fields
+    //   })
+    //   .catch(error => console.error('Error:', error));
+  } else {
+    // UUID is not available, handle the case accordingly
+    console.error('UUID not found in the URL');
+  }
+
+  // Function to update a customer
+  
+    // Get form data
+    const firstName = document.getElementById('firstName').value;
+    const lastName = document.getElementById('lastName').value;
+    // Retrieve other form fields as needed
+
+    // Construct the update payload
+    const updatePayload = {
+      cmd: 'update',
+      uuid: uuid,
+      first_name: firstName,
+      last_name: lastName,
+      // Add other fields from the form as needed
+    };
+
+    // Make the update request
+    fetch('https://qa2.sunbasedata.com/sunbase/portal/api/assignment.jsp', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'dGVzdEBzdW5iYXNlZGF0YS5jb206VGVzdEAxMjM=',
+      },
+      body: JSON.stringify(updatePayload),
+    })
+      .then(response => {
+        if (response.status === 200) {
+          // Successfully updated
+          alert('Customer updated successfully');
+        } else if (response.status === 500) {
+          // Error: UUID not found
+          alert('Error: UUID not found');
+        } else if (response.status === 400) {
+          // Error: Body is empty
+          alert('Error: Body is empty');
+        } else {
+          // Unexpected response status
+          alert(`Unexpected response status: ${response.status}`);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error.message);
+      });
+  
+
+
+    
+
+</script>
+
+</body>
+</html>

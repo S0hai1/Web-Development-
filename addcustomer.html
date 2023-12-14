@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Create New Customer</title>
+  <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+  <style>
+    body {
+      font-family: 'Roboto';
+            font-weight: bold;
+    }
+
+    form {
+      max-width: 400px;
+      margin: 20px auto;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+    }
+
+    .button1 {
+      
+        font-family: 'Roboto';
+            font-weight: bold;
+            color: white;
+            font-size: medium;
+            background-color: rgb(66, 149, 237);
+            border-radius: 0.15cm;
+            border-color: gre;
+            padding: 5px 15px;
+            transition: all 0.2s ease-in-out;
+    }
+    button {
+        font-family: 'Roboto';
+            font-weight: bold;
+            color: white;
+            font-size: medium;
+            background-color: rgb(66, 149, 237);
+            border-radius: 0.15cm;
+            border-color: gre;
+            padding: 5px 15px;
+            transition: all 0.2s ease-in-out;
+    }
+    button:hover {
+            background-color: #5c34ee;
+            box-shadow: 0 5px 15px rgb(66, 149, 237);
+        }
+  </style>
+</head>
+<body>
+
+<form id="customerForm">
+  <label for="firstName">First Name (mandatory):</label>
+  <input type="text" id="firstName" name="first_name" required>
+
+  <label for="lastName">Last Name (mandatory):</label>
+  <input type="text" id="lastName" name="last_name" required>
+
+  <label for="street">Street:</label>
+  <input type="text" id="street" name="street">
+
+  <label for="address">Address:</label>
+  <input type="text" id="address" name="address">
+
+  <label for="city">City:</label>
+  <input type="text" id="city" name="city">
+
+  <label for="state">State:</label>
+  <input type="text" id="state" name="state">
+
+  <label for="email">Email:</label>
+  <input type="email" id="email" name="email">
+
+  <label for="phone">Phone:</label>
+  <input type="tel" id="phone" name="phone">
+
+  <button type="button" onclick="createCustomer()">Submit</button>
+ 
+
+
+</form>
+ 
+<script>
+   function createCustomer() {
+      // Get input field values
+      const firstName = document.getElementById('firstName').value;
+      const lastName = document.getElementById('lastName').value;
+      const street = document.getElementById('street').value;
+      const address = document.getElementById('address').value;
+      const city = document.getElementById('city').value;
+      const state = document.getElementById('state').value;
+      const email = document.getElementById('email').value;
+      const phone = document.getElementById('phone').value;
+  
+  
+      // Check if mandatory fields are filled
+      if (!firstName || !lastName) {
+        alert('First Name and Last Name are mandatory!');
+        return;
+      }
+  
+      const accessToken = 'dGVzdEBzdW5iYXNlZGF0YS5jb206VGVzdEAxMjM=';
+  
+      fetch("https://qa2.sunbasedata.com/sunbase/portal/api/assignment.jsp?cmd=create", {
+        method: "POST",
+        body: JSON.stringify({
+          "first_name": firstName,
+          "last_name": lastName,
+          "street" : street,
+          "address": address,
+          "state": state,
+          "email" : email,
+          "phone" : phone
+          // Add other fields here if needed
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + accessToken
+        }
+      })
+        .then((response) => {
+          if (response.ok) {
+            return response.text();
+          } else {
+            throw new Error('Failed to create customer');
+          }
+        })
+        .then((json) => {
+          alert('Customer created successfully!');
+          // Redirect to the customer list page or another page
+          window.location.href = 'result.html';
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    }
+</script>
+
+</body>
+</html>
